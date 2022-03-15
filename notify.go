@@ -16,6 +16,9 @@ var (
 
 
 func routeMessage(m chat1.MsgSummary) {
+		if m.Content.TypeName != "text" {
+			return
+		}
 		if !strings.HasPrefix(m.Channel.Name, "voipkjongsys.") {
 			return
 		}
