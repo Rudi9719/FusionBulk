@@ -18,3 +18,9 @@ type Config struct {
 	BulkPass string `json:"BulkPass"`
 	Token    string `json:"Token"`
 }
+
+	
+type FusionMSG struct {
+	To   string `json:"to"`
+	Text string `json:"text"`
+}
