@@ -118,7 +118,6 @@ func main() {
 	router.HandleFunc("/bulkvs/webhook", bulkVSInput).Methods("POST")
 
 	router.HandleFunc("/api/sendSMS", SendMessage).Methods("POST")
-	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 	logger.Printf("Starting server")
 	logger.Fatal(http.ListenAndServe(":8080", router))
 }
