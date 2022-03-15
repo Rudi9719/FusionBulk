@@ -64,6 +64,7 @@ func bulkVSInput(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logger.Printf("%+v", err)
 	}
+	logger.Printf("%+v", m)
 
 }
 
@@ -72,6 +73,7 @@ func SendMessage(w http.ResponseWriter, r *http.Request) {
 	var ret MessageResponse
 	err := json.NewDecoder(r.Body).Decode(&m)
 	if err != nil {
+		logger.Printf("%+v", r.Body)
 		logger.Println("Error decoding json from request")
 		logger.Printf("%+v", err)
 		ret.Message = fmt.Sprintf("%+v", err)
@@ -98,6 +100,7 @@ func SendMessage(w http.ResponseWriter, r *http.Request) {
 	}
 	ret.MessageSendResponse = *resp
 	ret.Code = 200
+	ret.Message = "Message Sent."
 	fmt.Fprintf(w, "%+v", ret)
 }
 
