@@ -16,6 +16,9 @@ var (
 
 
 func routeMessage(m chat1.MsgSummary) {
+		if m.Sender.Username == k.Username {
+			return
+		}
 		if m.Content.TypeName != "text" {
 			logger.Printf("%+v is not text, ignoring.", m.Content.TypeName)
 			return
