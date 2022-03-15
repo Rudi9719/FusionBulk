@@ -71,6 +71,7 @@ func bulkVSInput(w http.ResponseWriter, r *http.Request) {
 func SendMessage(w http.ResponseWriter, r *http.Request) {
 	var m MessageRequest
 	var ret MessageResponse
+
 	err := json.NewDecoder(r.Body).Decode(&m)
 	if err != nil {
 		logger.Printf("%+v", r.Body)
@@ -82,18 +83,21 @@ func SendMessage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	username, password, ok := r.BasicAuth()
-	if  !ok || password != c.Token {		
-		logger.Printf("Invalid Token, got %+v wanted %+v", password, c.Token)
+	if  !ok || password != c.Token {
+		logger.Printf("%+v", r.Body)		
+		logger.Println("Invalid Token")
 		logger.Printf("%+v", err)
 		ret.Message = fmt.Sprintf("%+v", err)
 		ret.Code = 401
 		fmt.Fprintf(w, "%+v", ret)
 		return
 	}
+	logger.Printf("Sending message for %+v to %+v", username, m.To)
 	m.From = username
 	resp, err := client.PostMessageSend(&m.MessageSendRequest)
 	if err != nil {
 		logger.Println("Error sending message")
+		logger.Printf("%+v", r.Body)
 		logger.Printf("%+v", err)
 		ret.Message = fmt.Sprintf("%+v", err)
 		ret.Code = 503
