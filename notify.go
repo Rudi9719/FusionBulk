@@ -56,10 +56,12 @@ func logError(e error) {
 
 func notifyNumber(m bvs.MessageWebhookInput) {
 	msg := m.Message
-	k.SendMessageByChannel(chat1.ChatChannel{
-		Name: fmt.Sprintf("voipkjongsys.%+v", m.To[0]),
-		TopicName: m.From,
-	}, msg)
+	for i, _ := range(m.To) {
+		k.SendMessageByChannel(chat1.ChatChannel{
+			Name: fmt.Sprintf("voipkjongsys.%+v", m.To[i]),
+			TopicName: m.From,
+		}, msg)
+	}
 }
 
 func runKeybase() {
