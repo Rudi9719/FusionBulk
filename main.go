@@ -2,10 +2,11 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
-	"flag"
 	"net/http"
+	"strings"
 
 	"github.com/gorilla/mux"
 	bvs "github.com/rudi9719/BulkVS2Go"
@@ -70,9 +71,10 @@ func bulkVSInput(w http.ResponseWriter, r *http.Request) {
 
 func SendMessage(w http.ResponseWriter, r *http.Request) {
 	var m MessageRequest
+	var msg FusionMSG
 	var ret MessageResponse
 
-	err := json.NewDecoder(r.Body).Decode(&m)
+	err := json.NewDecoder(r.Body).Decode(&msg)
 	if err != nil {
 		logger.Printf("%+v", r.Body)
 		logger.Println("Error decoding json from request")
@@ -94,10 +96,11 @@ func SendMessage(w http.ResponseWriter, r *http.Request) {
 	}
 	logger.Printf("Sending message for %+v to %+v", username, m.To)
 	m.From = username
+	m.To = strings.Split(msg.To, ",")
+	m.Message = msg.Text
 	resp, err := client.PostMessageSend(&m.MessageSendRequest)
 	if err != nil {
 		logger.Println("Error sending message")
-		logger.Printf("%+v", r.Body)
 		logger.Printf("%+v", err)
 		ret.Message = fmt.Sprintf("%+v", err)
 		ret.Code = 503
@@ -116,7 +119,6 @@ func main() {
 	logger.Println("Adding HandleFuncs to router")
 	router.NotFoundHandler = http.HandlerFunc(notFoundPage)
 	router.HandleFunc("/bulkvs/webhook", bulkVSInput).Methods("POST")
-
 	router.HandleFunc("/api/sendSMS", SendMessage).Methods("POST")
 	logger.Printf("Starting server")
 	logger.Fatal(http.ListenAndServe(":8080", router))
