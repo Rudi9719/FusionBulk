@@ -32,16 +32,16 @@ func routeMessage(m chat1.MsgSummary) {
 		resp, err := client.PostMessageSend(&msg)
 		if err != nil {
 			log.Printf("Error posing message from Keybase: %+v", err)
-			k.ReactByConvID(m.ConvID, m.Id, "-1")
+			k.ReactByConvID(m.ConvID, m.Id, ":-1:")
 			return
 		}
 		for _, v := range(resp.Results) {
 			if v.Status != "SUCCESS" {
-				k.ReactByConvID(m.ConvID, m.Id, "-1")
+				k.ReactByConvID(m.ConvID, m.Id, ":-1:")
 				return
 			}
 		}
-		k.ReactByConvID(m.ConvID, m.Id, "+1")
+		k.ReactByConvID(m.ConvID, m.Id, ":+1:")
 
 
 }
