@@ -17,15 +17,16 @@ var (
 
 func routeMessage(m chat1.MsgSummary) {
 		if m.Content.TypeName != "text" {
-			logger.Printf("%+v", m.Content.TypeName)
+			logger.Printf("%+v is not text, ignoring.", m.Content.TypeName)
 			return
 		}
 		if !strings.HasPrefix(m.Channel.Name, "voipkjongsys.") {
-			logger.Printf("%+v", m.Channel.Name)
+			logger.Printf("%+v is not prefixed with voipkjongsys, ignoring.", m.Channel.Name)
 			return
 		}
+		logger.Printf("Converting Keybase message to SMS: %+v", m)
 		msg := bvs.MessageSendRequest {
-			To: strings.Split( m.Channel.TopicName, ","),
+			To: strings.Split(m.Channel.TopicName, ","),
 			From: strings.Replace(m.Channel.Name, "voipkjongsys.", "", -1),
 			Message: m.Content.Text.Body,
 		}
