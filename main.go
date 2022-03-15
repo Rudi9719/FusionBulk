@@ -81,7 +81,8 @@ func SendMessage(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "%+v", ret)
 		return
 	}
-	if m.Token != c.Token {		
+	username, password, ok := r.BasicAuth()
+	if  !ok || password != c.Token {		
 		logger.Println("Invalid Token")
 		logger.Printf("%+v", err)
 		ret.Message = fmt.Sprintf("%+v", err)
@@ -89,6 +90,7 @@ func SendMessage(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "%+v", ret)
 		return
 	}
+	m.From = username
 	resp, err := client.PostMessageSend(&m.MessageSendRequest)
 	if err != nil {
 		logger.Println("Error sending message")
