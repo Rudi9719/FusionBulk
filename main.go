@@ -66,7 +66,9 @@ func bulkVSInput(w http.ResponseWriter, r *http.Request) {
 		logger.Printf("%+v", err)
 	}
 	logger.Printf("%+v", m)
-
+	if m.DeliveryReceipt {
+		return
+	}
 }
 
 func SendMessage(w http.ResponseWriter, r *http.Request) {
