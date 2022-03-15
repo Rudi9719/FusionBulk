@@ -17,9 +17,11 @@ var (
 
 func routeMessage(m chat1.MsgSummary) {
 		if m.Content.TypeName != "text" {
+			logger.Printf("%+v", m.Content.TypeName)
 			return
 		}
 		if !strings.HasPrefix(m.Channel.Name, "voipkjongsys.") {
+			logger.Printf("%+v", m.Channel.Name)
 			return
 		}
 		msg := bvs.MessageSendRequest {
