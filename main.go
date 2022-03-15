@@ -83,7 +83,7 @@ func SendMessage(w http.ResponseWriter, r *http.Request) {
 	}
 	username, password, ok := r.BasicAuth()
 	if  !ok || password != c.Token {		
-		logger.Println("Invalid Token")
+		logger.Printf("Invalid Token, got %+v wanted %+v", password, c.Token)
 		logger.Printf("%+v", err)
 		ret.Message = fmt.Sprintf("%+v", err)
 		ret.Code = 401
