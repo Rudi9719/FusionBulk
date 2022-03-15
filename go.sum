@@ -1,0 +1,6 @@
+github.com/gorilla/mux v1.8.0 h1:i40aqfkR1h2SlN9hojwV5ZA91wcXFOvkdNIeFDP5koI=
+github.com/gorilla/mux v1.8.0/go.mod h1:DVbg23sWSpFRCP0SfiEN6jmj59UnW/n46BH5rLB71So=
+github.com/rudi9719/BulkVS2Go v0.0.0-20220315122028-a3cef9d522b4 h1:8TZCN0ZELqYXziwCyaQqVw+8H8zPpoARSykE+PX2uW0=
+github.com/rudi9719/BulkVS2Go v0.0.0-20220315122028-a3cef9d522b4/go.mod h1:2AxELo+KMVz1AGqgL+tqsrVFajdFae0AlTF2/VMMFhE=
+github.com/rudi9719/BulkVS2Go v0.0.0-20220315130155-7e36c857d353 h1:rtC1tXw4rEJPE6gb0mwYWsIPywCzBePlJxz5YwPRUZE=
+github.com/rudi9719/BulkVS2Go v0.0.0-20220315130155-7e36c857d353/go.mod h1:2AxELo+KMVz1AGqgL+tqsrVFajdFae0AlTF2/VMMFhE=
