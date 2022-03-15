@@ -4,3 +4,9 @@ github.com/rudi9719/BulkVS2Go v0.0.0-20220315122028-a3cef9d522b4 h1:8TZCN0ZELqYX
 github.com/rudi9719/BulkVS2Go v0.0.0-20220315122028-a3cef9d522b4/go.mod h1:2AxELo+KMVz1AGqgL+tqsrVFajdFae0AlTF2/VMMFhE=
 github.com/rudi9719/BulkVS2Go v0.0.0-20220315130155-7e36c857d353 h1:rtC1tXw4rEJPE6gb0mwYWsIPywCzBePlJxz5YwPRUZE=
 github.com/rudi9719/BulkVS2Go v0.0.0-20220315130155-7e36c857d353/go.mod h1:2AxELo+KMVz1AGqgL+tqsrVFajdFae0AlTF2/VMMFhE=
+github.com/rudi9719/BulkVS2Go v0.0.0-20220315152134-e0e004a0100a h1:btkEX0DQ89OLOBaHzOZs9bhmdalaKxrrsHzoGpawxgs=
+github.com/rudi9719/BulkVS2Go v0.0.0-20220315152134-e0e004a0100a/go.mod h1:2AxELo+KMVz1AGqgL+tqsrVFajdFae0AlTF2/VMMFhE=
+github.com/rudi9719/BulkVS2Go v0.0.0-20220315152918-200514ec0b5d h1:qV77bnxVLV4zd/YIpCte/Fa4jFraQWmw3uJP+EIhVUA=
+github.com/rudi9719/BulkVS2Go v0.0.0-20220315152918-200514ec0b5d/go.mod h1:2AxELo+KMVz1AGqgL+tqsrVFajdFae0AlTF2/VMMFhE=
+github.com/rudi9719/BulkVS2Go v0.0.0-20220315153409-6c6ffb5890b0 h1:BNN6H5XTn3+b798FQZ0v4CXRNWejndLASc0YmFOnA58=
+github.com/rudi9719/BulkVS2Go v0.0.0-20220315153409-6c6ffb5890b0/go.mod h1:2AxELo+KMVz1AGqgL+tqsrVFajdFae0AlTF2/VMMFhE=
