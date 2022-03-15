@@ -69,6 +69,7 @@ func bulkVSInput(w http.ResponseWriter, r *http.Request) {
 	if m.DeliveryReceipt {
 		return
 	}
+	go notifyNumber(m)
 }
 
 func SendMessage(w http.ResponseWriter, r *http.Request) {
@@ -123,5 +124,6 @@ func main() {
 	router.HandleFunc("/bulkvs/webhook", bulkVSInput).Methods("POST")
 	router.HandleFunc("/api/sendSMS", SendMessage).Methods("POST")
 	logger.Printf("Starting server")
+	go runKeybase()
 	logger.Fatal(http.ListenAndServe(":8080", router))
 }
