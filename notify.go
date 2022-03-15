@@ -57,6 +57,7 @@ func notifyNumber(m bvs.MessageWebhookInput) {
 }
 
 func runKeybase() {
+	logger.Printf("Starting Keybase!")
 	chat := routeMessage
 	err := logError
 
