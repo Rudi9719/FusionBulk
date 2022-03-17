@@ -67,7 +67,16 @@ func notifyNumber(m bvs.MessageWebhookInput) {
 			TopicName: m.From,
 		}, msg)
 		if err != nil {
-			logger.Printf("Unable to send message to %+v", fmt.Sprintf("voipkjongsys.%+v", m.To[i]))
+			_, err := k.SendMessageByChannel(chat1.ChatChannel{
+				Name: fmt.Sprintf("voipkjongsys.%+v", m.To[i]),
+				TopicName: "general",
+			}, fmt.Sprintf("%+v: %+v", m.From, msg))
+			if err != nil {
+				k.SendMessageByChannel(chat1.ChatChannel{
+					Name: "voipkjongsys",
+					TopicName: "general",
+				}, fmt.Sprintf("%+v tried to send %+v: %+v", m.From, m.To[i], msg))
+			}
 		}
 	}
 }
