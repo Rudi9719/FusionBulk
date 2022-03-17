@@ -27,7 +27,12 @@ func routeMessage(m chat1.MsgSummary) {
 			logger.Printf("%+v is not prefixed with voipkjongsys, ignoring.", m.Channel.Name)
 			return
 		}
+		if m.Channel.TopicName == "general" {
+			logger.Printf("%+v is general, ignoring.", m.Channel.TopicName)
+			return
+		}
 		logger.Printf("Converting Keybase message to SMS: %+v", m)
+
 		msg := bvs.MessageSendRequest {
 			To: strings.Split(m.Channel.TopicName, ","),
 			From: strings.Replace(m.Channel.Name, "voipkjongsys.", "", -1),
@@ -51,16 +56,19 @@ func routeMessage(m chat1.MsgSummary) {
 }
 
 func logError(e error) {
-	log.Printf("%+v", e)
+	log.Printf("KEYBASE: %+v", e)
 }
 
 func notifyNumber(m bvs.MessageWebhookInput) {
 	msg := m.Message
 	for i, _ := range(m.To) {
-		k.SendMessageByChannel(chat1.ChatChannel{
+		_, err := k.SendMessageByChannel(chat1.ChatChannel{
 			Name: fmt.Sprintf("voipkjongsys.%+v", m.To[i]),
 			TopicName: m.From,
 		}, msg)
+		if err != nil {
+			logger.Printf("Unable to send message to %+v", fmt.Sprintf("voipkjongsys.%+v", m.To[i]))
+		}
 	}
 }
 
