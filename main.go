@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"strings"
 
 	"github.com/gorilla/mux"
@@ -68,6 +69,11 @@ func bulkVSInput(w http.ResponseWriter, r *http.Request) {
 	logger.Printf("%+v", m)
 	if m.DeliveryReceipt {
 		return
+	}
+	
+	m.Message, err = url.QueryUnescape(m.Message)
+	if err != nil {
+		logger.Printf("%+v", err)
 	}
 	go notifyNumber(m)
 }
