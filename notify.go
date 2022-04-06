@@ -27,7 +27,12 @@ func routeMessage(m chat1.MsgSummary) {
 			logger.Printf("%+v is not prefixed with voipkjongsys, ignoring.", m.Channel.Name)
 			return
 		}
+		if m.Channel.TopicName == "general" {
+			logger.Printf("%+v is general, ignoring.", m.Channel.TopicName)
+			return
+		}
 		logger.Printf("Converting Keybase message to SMS: %+v", m)
+
 		msg := bvs.MessageSendRequest {
 			To: strings.Split(m.Channel.TopicName, ","),
 			From: strings.Replace(m.Channel.Name, "voipkjongsys.", "", -1),
@@ -51,17 +56,29 @@ func routeMessage(m chat1.MsgSummary) {
 }
 
 func logError(e error) {
-	log.Printf("%+v", e)
+	log.Printf("KEYBASE: %+v", e)
 }
 
 func notifyNumber(m bvs.MessageWebhookInput) {
 	msg := m.Message
 	for i, _ := range(m.To) {
-		k.SendMessageByChannel(chat1.ChatChannel{
+		_, err := k.SendMessageByChannel(chat1.ChatChannel{
 			Name: fmt.Sprintf("voipkjongsys.%+v", m.To[i]),
 			TopicName: m.From,
 			TopicType: keybase.TEAM,
 		}, msg)
+		if err != nil {
+			_, err := k.SendMessageByChannel(chat1.ChatChannel{
+				Name: fmt.Sprintf("voipkjongsys.%+v", m.To[i]),
+				TopicName: "general",
+			}, fmt.Sprintf("%+v: %+v", m.From, msg))
+			if err != nil {
+				k.SendMessageByChannel(chat1.ChatChannel{
+					Name: "voipkjongsys",
+					TopicName: "general",
+				}, fmt.Sprintf("%+v tried to send %+v: %+v", m.From, m.To[i], msg))
+			}
+		}
 	}
 }
 
