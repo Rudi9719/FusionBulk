@@ -60,6 +60,7 @@ func notifyNumber(m bvs.MessageWebhookInput) {
 		k.SendMessageByChannel(chat1.ChatChannel{
 			Name: fmt.Sprintf("voipkjongsys.%+v", m.To[i]),
 			TopicName: m.From,
+			TopicType: keybase.TEAM,
 		}, msg)
 	}
 }
