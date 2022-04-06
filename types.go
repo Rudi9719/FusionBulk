@@ -4,7 +4,7 @@ import bvs "github.com/rudi9719/BulkVS2Go"
 
 type MessageRequest struct {
 	bvs.MessageSendRequest `json:"message"`
-	Token string `json:"token"`
+	Token                  string `json:"token"`
 }
 
 type MessageResponse struct {
@@ -19,7 +19,6 @@ type Config struct {
 	Token    string `json:"Token"`
 }
 
-	
 type FusionMSG struct {
 	To   string `json:"to"`
 	Text string `json:"text"`

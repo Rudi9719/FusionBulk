@@ -30,7 +30,7 @@ func init() {
 	c = Config{
 		BulkUser: u,
 		BulkPass: p,
-		Token: t,
+		Token:    t,
 	}
 	client = *bvs.NewClient(u, p)
 }
@@ -88,8 +88,8 @@ func SendMessage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	username, password, ok := r.BasicAuth()
-	if  !ok || password != c.Token {
-		logger.Printf("%+v", r.Body)		
+	if !ok || password != c.Token {
+		logger.Printf("%+v", r.Body)
 		logger.Println("Invalid Token")
 		logger.Printf("%+v", err)
 		ret.Message = fmt.Sprintf("%+v", err)
