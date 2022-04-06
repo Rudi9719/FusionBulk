@@ -63,17 +63,19 @@ func notifyNumber(m bvs.MessageWebhookInput) {
 		_, err := k.SendMessageByChannel(chat1.ChatChannel{
 			Name:      fmt.Sprintf("voipkjongsys.%+v", m.To[i]),
 			TopicName: m.From,
-			TopicType: keybase.TEAM,
+			MembersType: keybase.TEAM,
 		}, msg)
 		if err != nil {
 			_, err := k.SendMessageByChannel(chat1.ChatChannel{
 				Name:      fmt.Sprintf("voipkjongsys.%+v", m.To[i]),
 				TopicName: "general",
-			}, fmt.Sprintf("%+v: %+v", m.From, msg))
+				MembersType: keybase.TEAM,
+			}, fmt.Sprintf("%+v", msg))
 			if err != nil {
 				_, err := k.SendMessageByChannel(chat1.ChatChannel{
 					Name:      "voipkjongsys",
 					TopicName: "general",
+					MembersType: keybase.TEAM,
 				}, fmt.Sprintf("%+v tried to send %+v: %+v", m.From, m.To[i], msg))
 				if err != nil {
 					logger.Printf("Unable to pass message %+v along to voipkjongsys.%+v, #%+v", msg, m.To[i], m.From)
