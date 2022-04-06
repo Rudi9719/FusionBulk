@@ -51,7 +51,7 @@ func getSessionIdentifier(r *http.Request) string {
 
 func notFoundPage(w http.ResponseWriter, r *http.Request) {
 	defer PanicSafe()
-	go logger.Println(fmt.Sprintf("%s triggered notFoundPage", getSessionIdentifier(r)))
+	logger.Printf("%s triggered notFoundPage", getSessionIdentifier(r))
 
 	fmt.Fprint(w,
 		"Sorry, a 404 error has occured. The requested page not found! <br><br>"+
