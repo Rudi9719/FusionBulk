@@ -164,6 +164,7 @@ func main() {
 
 	// TODO: Add any site-specific setup as a goroutine here!
 	go runNotifier()
+	listeners = append(listeners, twilioNotifier)
 	// Make sure this is the last call in the function
 	logger.Fatal(http.ListenAndServe(":8080", router))
 }
