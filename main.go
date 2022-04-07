@@ -164,7 +164,7 @@ func main() {
 
 	// TODO: Add any site-specific setup as a goroutine here!
 	go runKeybase()
-	listeners = append(listeners)
+	listeners = append(listeners, keybaseListener)
 	// Make sure this is the last call in the function
 	logger.Fatal(http.ListenAndServe(":8080", router))
 }
