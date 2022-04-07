@@ -23,3 +23,8 @@ type FusionMSG struct {
 	To   string `json:"to"`
 	Text string `json:"text"`
 }
+
+type NotifyListener struct {
+	To  []string
+	Run func(bvs.MessageWebhookInput)
+}

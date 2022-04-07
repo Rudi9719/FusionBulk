@@ -14,9 +14,10 @@ import (
 )
 
 var (
-	logger = log.Default()
-	client bvs.BulkVS2GoClient
-	c      Config
+	logger    = log.Default()
+	client    bvs.BulkVS2GoClient
+	c         Config
+	listeners []NotifyListener
 )
 
 func init() {
@@ -60,6 +61,7 @@ func notFoundPage(w http.ResponseWriter, r *http.Request) {
 			"<div class=\"error-actions\"><a href=\"/\" class=\"btn btn-primary btn-lg\"><span class=\"glyphicon glyphicon-home\"></span>Take Me Home </a>  <a href=\"mailto://rudi@nmare.net\" class=\"btn btn-default btn-lg\"><span class=\"glyphicon glyphicon-envelope\"></span> Contact Support </a></div>")
 
 }
+
 func bulkVSInput(w http.ResponseWriter, r *http.Request) {
 	var m bvs.MessageWebhookInput
 	err := json.NewDecoder(r.Body).Decode(&m)
@@ -67,18 +69,29 @@ func bulkVSInput(w http.ResponseWriter, r *http.Request) {
 		logger.Printf("%+v", err)
 	}
 	logger.Printf("%+v", m)
-	if m.DeliveryReceipt {
-		return
-	}
-	
+
 	m.Message, err = url.QueryUnescape(m.Message)
 	if err != nil {
 		logger.Printf("%+v", err)
 	}
 	go notifyNumber(m)
+	for _, listener := range listeners {
+		if listener.To == nil {
+			// If listener "To" is nil, send automatically and continue processing
+			go listener.Run(m)
+			continue
+		}
+		for _, lNumber := range listener.To {
+			for _, mNumber := range m.To {
+				if lNumber == mNumber {
+					go listener.Run(m)
+				}
+			}
+		}
+	}
 }
 
-func SendMessage(w http.ResponseWriter, r *http.Request) {
+func sendMessage(w http.ResponseWriter, r *http.Request) {
 	var m MessageRequest
 	var msg FusionMSG
 	var ret MessageResponse
@@ -122,14 +135,36 @@ func SendMessage(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "%+v", ret)
 }
 
+// Internal SendMessage function for extensions
+func SendMessage(msg *bvs.MessageSendRequest) (MessageResponse, error) {
+	var m MessageRequest
+	var ret MessageResponse
+
+	m.From = msg.From
+	m.To = msg.To
+	m.Message = msg.Message
+	resp, err := client.PostMessageSend(&m.MessageSendRequest)
+	if err != nil {
+		logger.Println("Error sending internal message")
+		logger.Printf("%+v", err)
+		return MessageResponse{}, err
+	}
+	ret.MessageSendResponse = *resp
+	return ret, nil
+}
+
 func main() {
 	defer PanicSafe()
 	router := mux.NewRouter().StrictSlash(true)
 	logger.Println("Adding HandleFuncs to router")
 	router.NotFoundHandler = http.HandlerFunc(notFoundPage)
 	router.HandleFunc("/bulkvs/webhook", bulkVSInput).Methods("POST")
-	router.HandleFunc("/api/sendSMS", SendMessage).Methods("POST")
+	router.HandleFunc("/api/sendSMS", sendMessage).Methods("POST")
 	logger.Printf("Starting server")
+
+	// TODO: Add any site-specific setup as a goroutine here!
 	go runKeybase()
+	listeners = append(listeners)
+	// Make sure this is the last call in the function
 	logger.Fatal(http.ListenAndServe(":8080", router))
 }

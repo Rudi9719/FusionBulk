@@ -11,7 +11,11 @@ import (
 )
 
 var (
-	k = keybase.NewKeybase()
+	k               = keybase.NewKeybase()
+	keybaseListener = NotifyListener{
+		To:  nil,
+		Run: notifyNumber,
+	}
 )
 
 func routeMessage(m chat1.MsgSummary) {
@@ -37,7 +41,7 @@ func routeMessage(m chat1.MsgSummary) {
 		From:    strings.Replace(m.Channel.Name, "voipkjongsys.", "", -1),
 		Message: m.Content.Text.Body,
 	}
-	resp, err := client.PostMessageSend(&msg)
+	resp, err := SendMessage(&msg)
 	if err != nil {
 		log.Printf("Error posing message from Keybase: %+v", err)
 		k.ReactByConvID(m.ConvID, m.Id, ":-1:")
@@ -58,23 +62,26 @@ func logError(e error) {
 }
 
 func notifyNumber(m bvs.MessageWebhookInput) {
+	if m.DeliveryReceipt {
+		return
+	}
 	msg := m.Message
 	for i := range m.To {
 		_, err := k.SendMessageByChannel(chat1.ChatChannel{
-			Name:      fmt.Sprintf("voipkjongsys.%+v", m.To[i]),
-			TopicName: m.From,
+			Name:        fmt.Sprintf("voipkjongsys.%+v", m.To[i]),
+			TopicName:   m.From,
 			MembersType: keybase.TEAM,
 		}, msg)
 		if err != nil {
 			_, err := k.SendMessageByChannel(chat1.ChatChannel{
-				Name:      fmt.Sprintf("voipkjongsys.%+v", m.To[i]),
-				TopicName: "general",
+				Name:        fmt.Sprintf("voipkjongsys.%+v", m.To[i]),
+				TopicName:   "general",
 				MembersType: keybase.TEAM,
 			}, fmt.Sprintf("%+v", msg))
 			if err != nil {
 				_, err := k.SendMessageByChannel(chat1.ChatChannel{
-					Name:      "voipkjongsys",
-					TopicName: "general",
+					Name:        "voipkjongsys",
+					TopicName:   "general",
 					MembersType: keybase.TEAM,
 				}, fmt.Sprintf("%+v tried to send %+v: %+v", m.From, m.To[i], msg))
 				if err != nil {
