@@ -74,7 +74,6 @@ func bulkVSInput(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logger.Printf("%+v", err)
 	}
-	go notifyNumber(m)
 	for _, listener := range listeners {
 		if listener.To == nil {
 			// If listener "To" is nil, send automatically and continue processing
