@@ -163,8 +163,7 @@ func main() {
 	logger.Printf("Starting server")
 
 	// TODO: Add any site-specific setup as a goroutine here!
-	go runKeybase()
-	listeners = append(listeners, keybaseListener)
+	go runNotifier()
 	// Make sure this is the last call in the function
 	logger.Fatal(http.ListenAndServe(":8080", router))
 }
