@@ -17,6 +17,7 @@ var (
 		To:  nil,
 		Run: notifyNumber,
 	}
+	deliveryReceipts = make(map[string]chat1.MessageID)
 )
 
 func routeMessage(m chat1.MsgSummary) {
@@ -54,7 +55,7 @@ func routeMessage(m chat1.MsgSummary) {
 			return
 		}
 	}
-	k.KVPut(&m.Channel.Name, m.Channel.TopicName, resp.RefID, strconv.FormatUint(uint64(m.Id), 10))
+	deliveryReceipts[resp.RefID] = m.Id
 	k.ReactByConvID(m.ConvID, m.Id, ":+1:")
 
 }
@@ -66,21 +67,8 @@ func logError(e error) {
 func notifyNumber(m bvs.MessageWebhookInput) {
 	if m.DeliveryReceipt {
 		for i := range m.To {
-			team := fmt.Sprintf("voipkjongsys.%+v", m.To[i])
-			test, err := k.KVGet(&team, m.To[i], m.RefID)
-			if err != nil {
-				log.Printf("%+v", test)
-				logError(err)
-				continue
-			}
-			defer k.KVDelete(&team, m.To[i], m.RefID)
-			mid, err := strconv.ParseUint(test.EntryValue, 10, 64)
-			if err != nil {
-				log.Printf("%+v", test)
-				logError(err)
-				continue
-			}
-			_, err = k.ReactByChannel(chat1.ChatChannel{
+			mid := deliveryReceipts[m.RefID]
+			_, err := k.ReactByChannel(chat1.ChatChannel{
 				Name:        fmt.Sprintf("voipkjongsys.%+v", m.To[i]),
 				TopicName:   m.From,
 				MembersType: keybase.TEAM,
