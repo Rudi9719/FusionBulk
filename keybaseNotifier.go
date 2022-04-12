@@ -74,6 +74,7 @@ func notifyNumber(m bvs.MessageWebhookInput) {
 			if err != nil {
 				logError(err)
 			}
+			delete(deliveryReceipts, m.RefID)
 		}
 		return
 	}
