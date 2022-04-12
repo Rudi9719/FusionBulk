@@ -69,9 +69,11 @@ func notifyNumber(m bvs.MessageWebhookInput) {
 			team := fmt.Sprintf("voipkjongsys.%+v", m.To[i])
 			test, err := k.KVGet(&team, m.To[i], m.RefID)
 			if err != nil {
+				log.Printf("%+v", test)
 				logError(err)
 				continue
 			}
+			defer k.KVDelete(&team, m.To[i], m.RefID)
 			mid, err := strconv.ParseUint(test.EntryValue, 10, 32)
 			if err != nil {
 				logError(err)
@@ -85,7 +87,6 @@ func notifyNumber(m bvs.MessageWebhookInput) {
 			if err != nil {
 				logError(err)
 			}
-			defer k.KVDelete(&team, m.To[i], m.RefID)
 		}
 		return
 	}
