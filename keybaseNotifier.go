@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 
 	bvs "github.com/rudi9719/BulkVS2Go"
@@ -53,6 +54,7 @@ func routeMessage(m chat1.MsgSummary) {
 			return
 		}
 	}
+	k.KVPut(&m.Channel.Name, m.Channel.TopicName, resp.RefID, fmt.Sprintf("%+v", m.Id))
 	k.ReactByConvID(m.ConvID, m.Id, ":+1:")
 
 }
@@ -63,7 +65,23 @@ func logError(e error) {
 
 func notifyNumber(m bvs.MessageWebhookInput) {
 	if m.DeliveryReceipt {
-		return
+		for i := range m.To {
+			team := fmt.Sprintf("voipkjongsys.%+v", m.To[i])
+			test, err := k.KVGet(&team, m.To[i], m.RefID)
+			if err != nil {
+				continue
+			}
+			mid, err := strconv.ParseUint(test.EntryValue, 10, 32)
+			if err != nil {
+				continue
+			}
+			k.ReactByChannel(chat1.ChatChannel{
+				Name:        fmt.Sprintf("voipkjongsys.%+v", m.To[i]),
+				TopicName:   m.From,
+				MembersType: keybase.TEAM,
+			}, chat1.MessageID(mid), ":white_check_mark:")
+			defer k.KVDelete(&team, m.To[i], m.RefID)
+		}
 	}
 	msg := m.Message
 	for i := range m.To {
