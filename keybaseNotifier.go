@@ -54,7 +54,7 @@ func routeMessage(m chat1.MsgSummary) {
 			return
 		}
 	}
-	k.KVPut(&m.Channel.Name, m.Channel.TopicName, resp.RefID, fmt.Sprintf("%+v", m.Id))
+	k.KVPut(&m.Channel.Name, m.Channel.TopicName, resp.RefID, strconv.FormatUint(uint64(m.Id), 10))
 	k.ReactByConvID(m.ConvID, m.Id, ":+1:")
 
 }
