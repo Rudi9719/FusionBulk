@@ -74,7 +74,7 @@ func notifyNumber(m bvs.MessageWebhookInput) {
 				continue
 			}
 			defer k.KVDelete(&team, m.To[i], m.RefID)
-			mid, err := strconv.ParseUint(test.EntryValue, 10, 32)
+			mid, err := strconv.ParseUint(test.EntryValue, 10, 64)
 			if err != nil {
 				logError(err)
 				continue
