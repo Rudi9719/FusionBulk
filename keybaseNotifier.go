@@ -82,6 +82,7 @@ func notifyNumber(m bvs.MessageWebhookInput) {
 			}, chat1.MessageID(mid), ":white_check_mark:")
 			defer k.KVDelete(&team, m.To[i], m.RefID)
 		}
+		return
 	}
 	msg := m.Message
 	for i := range m.To {
