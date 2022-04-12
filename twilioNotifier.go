@@ -2,14 +2,13 @@ package main
 
 import (
 	bvs "github.com/rudi9719/BulkVS2Go"
-	"net/http"
-    "net/url"
-	"log"
-	"strings"
-	"strconv"
 	"io/ioutil"
+	"log"
+	"net/http"
+	"net/url"
+	"strconv"
+	"strings"
 )
-
 
 // Set to your endpoint for twilio
 var endpoint = "https://voipkjongsys.com/app/sms/hook/sms_hook_twilio.php"
@@ -37,7 +36,7 @@ func notifyTwilio(m bvs.MessageWebhookInput) {
 		}
 		r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 		r.Header.Add("Content-Length", strconv.Itoa(len(data.Encode())))
-	
+
 		res, err := client.Do(r)
 		if err != nil {
 			log.Println(err)

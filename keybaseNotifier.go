@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"strconv"
 	"strings"
 
 	bvs "github.com/rudi9719/BulkVS2Go"
