@@ -66,12 +66,11 @@ func logError(e error) {
 func notifyNumber(m bvs.MessageWebhookInput) {
 	if m.DeliveryReceipt {
 		for i := range m.To {
-			mid := deliveryReceipts[m.RefID]
 			_, err := k.ReactByChannel(chat1.ChatChannel{
 				Name:        fmt.Sprintf("voipkjongsys.%+v", m.To[i]),
 				TopicName:   m.From,
 				MembersType: keybase.TEAM,
-			}, chat1.MessageID(mid), ":white_check_mark:")
+			}, deliveryReceipts[m.RefID], ":white_check_mark:")
 			if err != nil {
 				logError(err)
 			}
