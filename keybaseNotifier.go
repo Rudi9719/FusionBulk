@@ -69,17 +69,22 @@ func notifyNumber(m bvs.MessageWebhookInput) {
 			team := fmt.Sprintf("voipkjongsys.%+v", m.To[i])
 			test, err := k.KVGet(&team, m.To[i], m.RefID)
 			if err != nil {
+				logError(err)
 				continue
 			}
 			mid, err := strconv.ParseUint(test.EntryValue, 10, 32)
 			if err != nil {
+				logError(err)
 				continue
 			}
-			k.ReactByChannel(chat1.ChatChannel{
+			_, err = k.ReactByChannel(chat1.ChatChannel{
 				Name:        fmt.Sprintf("voipkjongsys.%+v", m.To[i]),
 				TopicName:   m.From,
 				MembersType: keybase.TEAM,
 			}, chat1.MessageID(mid), ":white_check_mark:")
+			if err != nil {
+				logError(err)
+			}
 			defer k.KVDelete(&team, m.To[i], m.RefID)
 		}
 		return
@@ -92,21 +97,7 @@ func notifyNumber(m bvs.MessageWebhookInput) {
 			MembersType: keybase.TEAM,
 		}, msg)
 		if err != nil {
-			_, err := k.SendMessageByChannel(chat1.ChatChannel{
-				Name:        fmt.Sprintf("voipkjongsys.%+v", m.To[i]),
-				TopicName:   "general",
-				MembersType: keybase.TEAM,
-			}, fmt.Sprintf("%+v", msg))
-			if err != nil {
-				_, err := k.SendMessageByChannel(chat1.ChatChannel{
-					Name:        "voipkjongsys",
-					TopicName:   "general",
-					MembersType: keybase.TEAM,
-				}, fmt.Sprintf("%+v tried to send %+v: %+v", m.From, m.To[i], msg))
-				if err != nil {
-					logger.Printf("Unable to pass message %+v along to voipkjongsys.%+v, #%+v", msg, m.To[i], m.From)
-				}
-			}
+			logError(err)
 		}
 	}
 }
